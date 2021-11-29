@@ -1,0 +1,6 @@
+## Deployed Addresses
+
+Network: Rinkeby
+* TestCoin: 0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f, Link: https://rinkeby.etherscan.io/address/0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f
+* DiamondHand: 0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD, Link: https://rinkeby.etherscan.io/address/0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD
+* HodlVault: 0xde75D0f0FB7d56F311fA4834627277377AbcD341, Link: https://rinkeby.etherscan.io/address/0xde75D0f0FB7d56F311fA4834627277377AbcD341

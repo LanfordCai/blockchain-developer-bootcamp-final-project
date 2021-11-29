@@ -30,13 +30,15 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         uint256 unlockTime;
         uint256 lockWindow;
         uint256 penalty;
+        uint256 amountRecord;
         Status status;
     }
 
     /// @notice Query lock info via address
-    mapping(address => LockInfo) public locks;
+    mapping(address => LockInfo[]) public locks;
 
     uint256 public maxLockWindow = 4 * 365 days;
+    uint256 public maxLocksPerUser = 5;
 
     /// @notice Penalty will be sent to this address
     address public penaltyReceiver;
@@ -50,14 +52,6 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         uint256 amount,
         uint256 unlockTime,
         uint256 penalty
-    );
-
-    /// @notice Emit when the user increase funds in a lock vault
-    event LockedAmountIncreased(
-        address indexed account,
-        uint256 increasedAmount,
-        uint256 totalAmount,
-        uint256 unlockTime
     );
 
     /// @notice Emit when a vault is redeemed
@@ -94,21 +88,27 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         uint256 _penalty
     ) external override {
         require(_amount > 0, "Amount should > 0");
-        require(_lockWindow > 0, "lockWindow should > 0");
+        require(
+            _lockWindow > 0 && _lockWindow < maxLockWindow,
+            "lockWindow should greater than 0 and smaller than maxLockWindow"
+        );
         require(_penalty <= 100, "penalty ratio should in range 0..100");
 
-        LockInfo storage lockInfo = locks[msg.sender];
-        require(
-            lockInfo.status == Status.Active && lockInfo.amount == 0,
-            "Lock already exists"
-        );
+        LockInfo[] storage lockItems = locks[msg.sender];
+        require(lockItems.length < maxLocksPerUser, "Lock number limit exceed");
+
         uint256 unlockTime = block.timestamp.add(_lockWindow);
 
-        lockInfo.amount = _amount;
-        lockInfo.unlockTime = unlockTime;
-        lockInfo.lockWindow = _lockWindow;
-        lockInfo.penalty = _penalty;
-        lockInfo.status = Status.Active;
+        lockItems.push(
+            LockInfo({
+                amount: _amount,
+                unlockTime: unlockTime,
+                lockWindow: _lockWindow,
+                penalty: _penalty,
+                amountRecord: _amount,
+                status: Status.Active
+            })
+        );
 
         _token.safeTransferFrom(msg.sender, address(this), _amount);
 
@@ -116,12 +116,9 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
     }
 
     /// @notice Redeem funds from vault
-    function redeem() external override nonReentrant {
-        LockInfo storage lockInfo = locks[msg.sender];
-        require(
-            lockInfo.status == Status.Active,
-            "Lock should in Active status"
-        );
+    function redeem(uint256 index) external override nonReentrant {
+        LockInfo storage lockInfo = locks[msg.sender][index];
+        require(lockInfo.status == Status.Active, "Invalid lock status");
         require(lockInfo.unlockTime <= block.timestamp, "Can't redeem now");
         require(lockInfo.amount > 0, "Lock is empty");
 
@@ -129,12 +126,9 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
     }
 
     /// @notice Force redeem funds from vault
-    function forceRedeem() external override nonReentrant {
-        LockInfo storage lockInfo = locks[msg.sender];
-        require(
-            lockInfo.status == Status.Active,
-            "Lock should in Active status"
-        );
+    function forceRedeem(uint256 index) external override nonReentrant {
+        LockInfo storage lockInfo = locks[msg.sender][index];
+        require(lockInfo.status == Status.Active, "Invalid lock status");
         require(lockInfo.amount > 0, "Lock is empty");
 
         if (lockInfo.unlockTime <= block.timestamp) {
@@ -147,20 +141,16 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
             lockInfo.amount = 0;
             lockInfo.status = Status.ForceRedeemed;
 
-            _token.safeTransferFrom(address(this), msg.sender, transferAmount);
-            _token.safeTransferFrom(
-                address(this),
-                penaltyReceiver,
-                penaltyAmount
-            );
+            _token.safeTransfer(msg.sender, transferAmount);
+            _token.safeTransfer(penaltyReceiver, penaltyAmount);
 
             emit ForceRedeemed(msg.sender, transferAmount, penaltyAmount);
         }
     }
 
     /// @notice Claim NFT after redeeming funds
-    function claim() external override nonReentrant {
-        LockInfo storage lockInfo = locks[msg.sender];
+    function claim(uint256 index) external override nonReentrant {
+        LockInfo storage lockInfo = locks[msg.sender][index];
         require(
             lockInfo.status == Status.Redeemed,
             "Lock should in Redeemed status"
@@ -168,7 +158,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         lockInfo.status = Status.Claimed;
         DiamondHand.SVGParams memory svgParams = DiamondHand.SVGParams({
             token: addressToString(address(_token)),
-            amount: lockInfo.amount,
+            amount: lockInfo.amountRecord,
             lockWindow: lockInfo.lockWindow,
             penaltyRatio: lockInfo.penalty
         });
@@ -186,12 +176,16 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         maxLockWindow = _maxLockWindow;
     }
 
+    function setMaxLocksPerUser(uint256 _maxLocksPerUser) public onlyOwner {
+        maxLocksPerUser = _maxLocksPerUser;
+    }
+
     function _redeem(LockInfo storage lockInfo) private {
         uint256 amount = lockInfo.amount;
 
         lockInfo.amount = 0;
         lockInfo.status = Status.Redeemed;
-        _token.safeTransferFrom(address(this), msg.sender, amount);
+        _token.safeTransfer(msg.sender, amount);
 
         emit Redeemed(msg.sender, amount);
     }

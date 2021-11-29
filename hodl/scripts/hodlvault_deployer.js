@@ -13,13 +13,19 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const testCoinContract = "0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f";
+  const diamondHandContract = "0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD";
 
-  await greeter.deployed();
+  const DiamondHand = await ethers.getContractFactory("DiamondHand");
+  const diamondHand = await DiamondHand.attach(diamondHandContract);
 
-  console.log("Greeter deployed to:", greeter.address);
+  Vault = await ethers.getContractFactory("HodlVault");
+  vault = await Vault.deploy(testCoinContract, diamondHandContract);
+
+  await vault.deployed();
+  console.log("HodlVault deployed to:", vault.address);
+
+  await diamondHand.grantRole(await diamondHand.MINTER(), vault.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

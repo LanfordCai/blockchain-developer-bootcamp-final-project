@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./IHodlVault.sol";
 import "base64-sol/base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @title The ERC721 NFT for all the users who finished a lock
 contract DiamondHand is ERC721URIStorage, AccessControl {
@@ -59,17 +60,17 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
                 '<g transform="matrix(1.08 0 0 1.08 225 488.21)" style=""  >',
                 '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-69.32" y="4.4" >',
                 "Lock Window: ",
-                params.lockWindow,
+                Strings.toString(params.lockWindow),
                 "</tspan></text></g>",
                 '<g transform="matrix(1.08 0 0 1.08 225 524.24)" style=""  >',
                 '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-110.67" y="4.4" >',
                 "Amount: ",
-                params.amount,
+                Strings.toString(params.amount),
                 "</tspan></text></g>",
                 '<g transform="matrix(1.08 0 0 1.08 225 560.27)" style=""  >'
                 '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-57.29" y="4.4" >',
                 "Penalty Ratio: ",
-                params.penaltyRatio,
+                Strings.toString(params.penaltyRatio),
                 "%</tspan></text></g></svg>"
             )
         );

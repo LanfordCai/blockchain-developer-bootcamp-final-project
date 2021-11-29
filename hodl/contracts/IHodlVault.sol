@@ -13,11 +13,9 @@ interface IHodlVault {
         uint256 _penalty
     ) external;
 
-    function increaseAmount(uint256 _amount) external;
+    function redeem(uint256 index) external;
 
-    function redeem() external;
+    function forceRedeem(uint256 index) external;
 
-    function forceRedeem() external;
-
-    function claim() external;
+    function claim(uint256 index) external;
 }
