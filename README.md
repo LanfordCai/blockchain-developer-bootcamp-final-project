@@ -5,9 +5,15 @@ HODL! is the name of my final project, and this repository contains two projects
 1. hodl: the contract of HODL!
 2. hodl-fe: the front-end code of HODL!
 
+### My Ethereum Address
+
+lanford33.eth or 0xB8153Ae427265daa3d1C8704698b2Cf66F59c4C5
+
 ### Project Demo
 
-TODO: 
+Demo: https://ohmycoin.today/
+
+Screencast: TBD
 
 ### Project Description
 
@@ -37,4 +43,37 @@ For now, HODL only supports TestCoin(TC), which is issued for testing.
 
 ### Project Installation
 
-TODO: 
+#### prerequisite
+
+```
+node >= v14.18.0
+npm >= 6.14.15
+hardhat >= 2.2.1
+```
+
+#### Installation
+
+```
+git clone https://github.com/LanfordCai/blockchain-developer-bootcamp-final-project.git
+
+cd blockchain-developer-bootcamp-final-project
+```
+
+For smart contract part:
+
+```
+cd hodl
+npm install
+hh test
+```
+
+For front-end part:
+
+```
+cd hodl-fe
+yarn install
+yarn start
+```
+
+
+
