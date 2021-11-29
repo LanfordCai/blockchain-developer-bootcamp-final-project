@@ -14,8 +14,8 @@ async function main() {
   // await hre.run('compile');
 
   const testCoinContract = "0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f";
-  const diamondHandContract = "0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD";
-  const vaultContract = "0xde75D0f0FB7d56F311fA4834627277377AbcD341"
+  const diamondHandContract = "0x59a560a367D41a8009331333C0F619b533A0aE70";
+  const vaultContract = "0x601c7AE393f5d17694A047fFb6d1459031aC6fd3"
 
   const DiamondHand = await ethers.getContractFactory("DiamondHand");
   const diamondHand = await DiamondHand.attach(diamondHandContract);
