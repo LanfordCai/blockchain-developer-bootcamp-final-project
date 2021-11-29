@@ -31,12 +31,15 @@ const Vaults = (props) => {
             amount: ethers.utils.formatUnits(lock.amount, decimals),
             initAmount: ethers.utils.formatUnits(lock.amountRecord, decimals),
             lockWindow: lock.lockWindow.toString(),
+            lockAt: new Date(lock.lockAt.toNumber() * 1000).toISOString(),
+            unlockAt: new Date(lock.unlockTime.toNumber() * 1000).toISOString(),
             penalty: `${lock.penalty.toString()}%`,
             index: i,
             status: statuses[lock.status]
           }
           vs.push(v)
         } catch (e) {
+          console.log(e)
           break
         }
       }
@@ -115,7 +118,8 @@ const Vaults = (props) => {
                 <Col span>
                   <Row><Title level={5}>Locked Amount: {item.amount}</Title></Row>
                   <Row><Title level={5}>Init Amount: {item.initAmount}</Title></Row>
-                  <Row><Title level={5}>Lock Window(seconds): {item.lockWindow}</Title></Row>
+                  <Row><Title level={5}>Lock At: {item.lockAt}</Title></Row>
+                  <Row><Title level={5}>Unlock At: {item.unlockAt}</Title></Row>
                   <Row><Title level={5}>PenaltyRatio: {item.penalty}</Title></Row>
                   <Row><Title level={5}>Status: {item.status}</Title></Row>
                 </Col>
