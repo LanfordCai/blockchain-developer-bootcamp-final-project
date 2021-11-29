@@ -21,10 +21,10 @@ const Vaults = (props) => {
       0: "Active", 1: "Redeemed", 2: "ForceRedeemed", 3: "Claimed"
     }
     try {
-      const maxVaults = await vault.maxLocksPerUser()
+      const count = await vault.lockCount(account)
       const decimals = await token.decimals()
       let vs = []
-      for (let i = 0; i < maxVaults; i++) {
+      for (let i = 0; i < count; i++) {
         try {
           let lock = await vault.locks(account, i)
           let v = {

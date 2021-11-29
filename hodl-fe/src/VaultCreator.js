@@ -57,11 +57,11 @@ const VaultCreator = (props) => {
         alert(`Please approve Hodl spent your TestCoin. Allowance should be greater than ${amount.toString()}`)
       } else {
         let lockWindow = 10
-        if (values.lock_window == '10 seconds') {
+        if (values.lock_window === '10 seconds') {
           lockWindow = 10
-        } else if (values.lock_window == '1 week') {
+        } else if (values.lock_window === '1 week') {
           lockWindow = 60 * 60 * 24 * 7
-        } else if (values.lock_window == '1 month') {
+        } else if (values.lock_window === '1 month') {
           lockWindow = 60 * 60 * 24 * 30
         }
         let penaltyRatio = values.penalty_ratio
