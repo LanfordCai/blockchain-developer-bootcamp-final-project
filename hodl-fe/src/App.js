@@ -1,15 +1,15 @@
 import React from "react";
 import Header from "./Header";
 import VaultCreator from "./VaultCreator";
-import Vault from "./Vault";
+import Vaults from "./Vaults";
 import { Divider } from 'antd';
 import { useEagerConnect, useInactiveListener } from './hooks'
 
-import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 
 const App = () => {
   const context = useWeb3React()
-  const { connector, library, chainId, account, activate, deactivate, active, error } = context
+  const { connector } = context
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState()
   React.useEffect(() => {
@@ -17,6 +17,8 @@ const App = () => {
       setActivatingConnector(undefined)
     }
   }, [activatingConnector, connector])
+
+  const [value, setValue] = React.useState(0);
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
@@ -26,11 +28,15 @@ const App = () => {
 
   return (
     <div className="hodlApp">
-      <Header />
+      <Header handleTxConfirmed={() => {
+        setValue(value => value + 1)
+      }} />
       <Divider />
-      <VaultCreator />
+      <VaultCreator handleTxConfirmed={() => {
+        setValue(value => value + 1)
+      }} trigger={value} />
       <Divider />
-      <Vault />
+      <Vaults trigger={value} />
     </div>
   );
 }

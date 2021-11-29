@@ -39,13 +39,14 @@ const Header = (props) => {
       alert(`Transaction created: ${tx['hash']}`)
       await tx.wait()
       alert(`Transaction confirmed: ${tx['hash']}`)
+      props.handleTxConfirmed()
     }
   }
 
   return (
     <div className="header">
       <Row type="flex" justify="space-between" align="middle">
-        <Col><Title level={2}>HODL Protocol</Title></Col>
+        <Col><Title level={2}>HODL!</Title></Col>
         <Col>{!!error ? <label>{getErrorMessage(error)}</label> : null}</Col>
         <Col>
           <Button onClick={() => {

@@ -10,19 +10,11 @@ import { tokenContract, hodlContract } from './contracts'
 const VaultCreator = (props) => {
 
   // data
-  const { account, library, chainId, active } = useWeb3React()
+  const { account, library, active } = useWeb3React()
   const [balance, setBalance] = React.useState("Unknown")
 
   const token = new ethers.Contract(tokenContract, erc20ABI.default, library)
   const vault = new ethers.Contract(hodlContract, hodlABI.default, library)
-
-  React.useEffect(() => {
-    if (active) {
-      getTokenBalance()
-    } else {
-      setBalance("Unknown")
-    }
-  })
 
   const getTokenBalance = async () => {
     try {
@@ -34,6 +26,14 @@ const VaultCreator = (props) => {
       setBalance("Unknown")
     }
   }
+
+  React.useEffect(() => {
+    if (active) {
+      getTokenBalance()
+    } else {
+      setBalance("Unknown")
+    }
+  }, [active, account, props.trigger])
 
   // interaction
   const handleApprove = async () => {
@@ -70,6 +70,7 @@ const VaultCreator = (props) => {
         alert(`Transaction created: ${tx['hash']}`)
         await tx.wait()
         alert(`Transaction confirmed: ${tx['hash']}`)
+        props.handleTxConfirmed()
       }
     } catch (e) {
       alert(e.message)
