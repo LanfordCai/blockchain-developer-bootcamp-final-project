@@ -134,7 +134,7 @@ const VaultCreator = (props) => {
           allowClear
         >
           <Option value="10 seconds">10 seconds</Option>
-          <Option value="1 day">1 week</Option>
+          <Option value="1 week">1 week</Option>
           <Option value="1 month">1 month</Option>
         </Select>
       </Form.Item>
