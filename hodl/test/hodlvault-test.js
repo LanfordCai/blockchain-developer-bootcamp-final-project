@@ -57,6 +57,12 @@ describe("lock", function () {
     expect(lock.status == 0)
     expect(lock.unlockTime.eq(ethers.BigNumber.from(time + lockWindow)))
 
+    expect(lock.lockAt.eq(time))
+    expect(lock.redeemAt.isZero())
+    expect(lock.claimAt.isZero())
+
+    expect(await vault.lockCount(owner.address)).to.equal(1)
+
     expect(await testCoin.balanceOf(owner.address)).eq(`${90 * 10 ** 18}`)
     expect(await testCoin.balanceOf(vault.address)).eq(`${10 * 10 ** 18}`)
   });
@@ -75,6 +81,8 @@ describe("lock", function () {
     await vault.connect(owner).lock(10, 1000, 20);
     await vault.connect(owner).lock(10, 1000, 20);
     await expect(vault.connect(owner).lock(20, 1000, 20)).to.be.revertedWith('Lock number limit exceed');
+
+    expect(await vault.lockCount(owner.address)).to.equal(2)
   })
 });
 
@@ -101,6 +109,7 @@ describe("redeem", function () {
     const lock = await vault.locks(owner.address, 0);
     // Redeemed
     expect(lock.status == 1)
+    expect(lock.redeemAt.eq(time + lockWindow))
 
     // Can only redeem once
     await expect(vault.connect(owner).redeem(0)).to.be.revertedWith("Invalid lock status");
@@ -140,12 +149,16 @@ describe("forceRedeem", function () {
     const lock = await vault.locks(owner.address, 0);
     // the status of lock should be `Redeemed` rather than `ForceRedeemed`
     expect(lock.status == 1)
+    expect(lock.redeemAt.eq(time + lockWindow))
 
     // Can only redeem once
     await expect(vault.connect(owner).forceRedeem(0)).to.be.revertedWith("Invalid lock status");
   })
 
   it("Should be success with penalty if the lock isn't expired", async function () {
+    const time = Math.floor(Date.now() / 1000) + 5000;
+    await ethers.provider.send('evm_setNextBlockTimestamp', [time]);
+
     const amount = ethers.BigNumber.from(`${10 * 10 ** 18}`);
     const lockWindow = 1000;
     const penalty = 20;
@@ -164,6 +177,7 @@ describe("forceRedeem", function () {
     const lock = await vault.locks(owner.address, 0);
     // ForceRedeemed
     expect(lock.status == 2)
+    expect(lock.redeemAt.eq(time))
 
     // Can only forceRedeem once
     await expect(vault.connect(owner).forceRedeem(0)).to.be.revertedWith("Invalid lock status");
@@ -172,7 +186,7 @@ describe("forceRedeem", function () {
 
 describe("Claim", function () {
   it("Only redeemed lock can claim NFT", async function () {
-    const time = Math.floor(Date.now() / 1000) + 5000;
+    const time = Math.floor(Date.now() / 1000) + 6000;
     await ethers.provider.send('evm_setNextBlockTimestamp', [time]);
 
     const amount = ethers.BigNumber.from(`${10 * 10 ** 18}`);
@@ -191,6 +205,11 @@ describe("Claim", function () {
     await expect(vault.connect(owner).claim(0)).to.emit(vault, 'Claimed');
     await expect(vault.connect(owner).claim(1)).to.be.revertedWith('Lock should in Redeemed status');
     await expect(vault.connect(owner).claim(2)).to.be.revertedWith('Lock should in Redeemed status');
+
+    const lock = await vault.locks(owner.address, 0);
+    // Claimed
+    expect(lock.status == 3)
+    expect(lock.claimAt.eq(time + lockWindow))
   })
 
   it("Should get valid ERC721 token", async function () {

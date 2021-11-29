@@ -27,7 +27,10 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
 
     struct LockInfo {
         uint256 amount;
+        uint256 lockAt;
         uint256 unlockTime;
+        uint256 redeemAt;
+        uint256 claimAt;
         uint256 lockWindow;
         uint256 penalty;
         uint256 amountRecord;
@@ -36,6 +39,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
 
     /// @notice Query lock info via address
     mapping(address => LockInfo[]) public locks;
+    mapping(address => uint256) public lockCount;
 
     uint256 public maxLockWindow = 4 * 365 days;
     uint256 public maxLocksPerUser = 5;
@@ -98,11 +102,14 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         require(lockItems.length < maxLocksPerUser, "Lock number limit exceed");
 
         uint256 unlockTime = block.timestamp.add(_lockWindow);
-
+        lockCount[msg.sender] = lockCount[msg.sender].add(1);
         lockItems.push(
             LockInfo({
                 amount: _amount,
+                lockAt: block.timestamp,
                 unlockTime: unlockTime,
+                redeemAt: 0,
+                claimAt: 0,
                 lockWindow: _lockWindow,
                 penalty: _penalty,
                 amountRecord: _amount,
@@ -139,6 +146,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
             uint256 transferAmount = amount.sub(penaltyAmount);
 
             lockInfo.amount = 0;
+            lockInfo.redeemAt = block.timestamp;
             lockInfo.status = Status.ForceRedeemed;
 
             _token.safeTransfer(msg.sender, transferAmount);
@@ -156,6 +164,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
             "Lock should in Redeemed status"
         );
         lockInfo.status = Status.Claimed;
+        lockInfo.claimAt = block.timestamp;
         DiamondHand.SVGParams memory svgParams = DiamondHand.SVGParams({
             token: addressToString(address(_token)),
             amount: lockInfo.amountRecord,
@@ -184,6 +193,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         uint256 amount = lockInfo.amount;
 
         lockInfo.amount = 0;
+        lockInfo.redeemAt = block.timestamp;
         lockInfo.status = Status.Redeemed;
         _token.safeTransfer(msg.sender, amount);
 
