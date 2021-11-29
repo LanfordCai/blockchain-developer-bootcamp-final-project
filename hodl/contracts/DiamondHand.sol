@@ -15,7 +15,8 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
     struct SVGParams {
         string token;
         uint256 amount;
-        uint256 lockWindow;
+        uint256 lockAt;
+        uint256 unlockAt;
         uint256 penaltyRatio;
     }
 
@@ -55,21 +56,29 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
                 '<text xml:space="preserve" font-family="Roboto" font-size="67" font-style="normal" font-weight="700" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-134.2" y="21.05" >Diamond</tspan></text></g>',
                 '<g transform="matrix(1 0 0 1 225 331.57)" style="" id="159e2ed2-61a8-4660-957a-a1689f3662f9"  >',
                 '<text xml:space="preserve" font-family="Roboto" font-size="69" font-style="normal" font-weight="700" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-81.63" y="21.68" >Hand</tspan></text></g>',
-                '<g transform="matrix(1.08 0 0 1.08 225 450.33)" style="" id="8ca46c6b-558c-41c5-8bbf-764b44f6bc67"  >',
-                '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-184.06" y="4.4" >Token: 0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f</tspan></text></g>',
-                '<g transform="matrix(1.08 0 0 1.08 225 488.21)" style=""  >',
-                '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-69.32" y="4.4" >',
-                "Lock Window: ",
-                Strings.toString(params.lockWindow),
+                '<g transform="matrix(1.08 0 0 1.08 225 450)" style="" id="8ca46c6b-558c-41c5-8bbf-764b44f6bc67"  >',
+                '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-184.06" y="4.4" >',
+                "Token: ",
+                params.token,
                 "</tspan></text></g>",
-                '<g transform="matrix(1.08 0 0 1.08 225 524.24)" style=""  >',
+                '<g transform="matrix(1.08 0 0 1.08 225 490)" style=""  >',
+                '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-69.32" y="4.4" >',
+                "Lock At: ",
+                Strings.toString(params.lockAt),
+                "</tspan></text></g>",
+                '<g transform="matrix(1.08 0 0 1.08 225 530)" style=""  >',
                 '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-110.67" y="4.4" >',
                 "Amount: ",
-                Strings.toString(params.amount),
+                Strings.toString(params.unlockAt),
                 "</tspan></text></g>",
-                '<g transform="matrix(1.08 0 0 1.08 225 560.27)" style=""  >'
+                '<g transform="matrix(1.08 0 0 1.08 225 570)" style=""  >'
                 '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-57.29" y="4.4" >',
                 "Penalty Ratio: ",
+                Strings.toString(params.amount),
+                "</tspan></text></g>",
+                '<g transform="matrix(1.08 0 0 1.08 225 610)" style=""  >',
+                '<text xml:space="preserve" font-family="Roboto" font-size="14" font-style="normal" font-weight="400" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-110.67" y="4.4" >',
+                "Amount: ",
                 Strings.toString(params.penaltyRatio),
                 "%</tspan></text></g></svg>"
             )

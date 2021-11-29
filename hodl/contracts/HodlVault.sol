@@ -168,7 +168,8 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         DiamondHand.SVGParams memory svgParams = DiamondHand.SVGParams({
             token: addressToString(address(_token)),
             amount: lockInfo.amountRecord,
-            lockWindow: lockInfo.lockWindow,
+            lockAt: lockInfo.lockAt,
+            unlockAt: lockInfo.unlockTime,
             penaltyRatio: lockInfo.penalty
         });
 
