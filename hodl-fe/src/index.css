@@ -1,0 +1,19 @@
+body {
+    padding: 50px;
+    background-color: #d4eaf5;
+    font-family: sans-serif;
+}
+
+.hodlApp {
+    width: 100%
+}
+
+.vaultCreator {
+    width: 80%;
+    padding: 30px;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+}
