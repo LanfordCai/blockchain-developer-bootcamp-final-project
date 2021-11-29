@@ -3,7 +3,7 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-/// @notice HodlVault interface
+/// @title HodlVault interface
 interface IHodlVault {
     function token() external view returns (IERC20);
 

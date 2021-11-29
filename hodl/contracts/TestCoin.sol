@@ -3,7 +3,7 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-/// @notice ERC20 token used for testing purpose
+/// @title ERC20 token used for testing purpose
 contract TestCoin is ERC20 {
     constructor(uint256 initialSupply) ERC20("TestCoin", "TC") {
         _mint(msg.sender, initialSupply);

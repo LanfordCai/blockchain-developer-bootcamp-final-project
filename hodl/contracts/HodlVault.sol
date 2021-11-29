@@ -3,16 +3,20 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./IHodlVault.sol";
+import "./DiamondHand.sol";
+import "./HexStrings.sol";
 
 /// @title A vault used to store locked assets
 /// @author Lanford33
 contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
+    using HexStrings for uint256;
 
     enum Status {
         Active,
@@ -38,6 +42,7 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
     address public penaltyReceiver;
 
     IERC20 private _token;
+    DiamondHand private _diamondHand;
 
     /// @notice Emit when a new lock created
     event LockCreated(
@@ -68,8 +73,9 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
     /// @notice Emit when a DiamondHand NFT is claimed
     event Claimed(address indexed account);
 
-    constructor(IERC20 __token) {
+    constructor(IERC20 __token, DiamondHand __diamondHand) {
         _token = __token;
+        _diamondHand = __diamondHand;
         penaltyReceiver = msg.sender;
     }
 
@@ -107,31 +113,6 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         _token.safeTransferFrom(msg.sender, address(this), _amount);
 
         emit LockCreated(msg.sender, _amount, unlockTime, _penalty);
-    }
-
-    /// @notice Add more funds to the vault
-    /// @param _amount The amount going to add in vault
-    /// @dev After increasing amount, the lockTime will be re-calculated, and the start-time will be reset to now.
-    function increaseAmount(uint256 _amount) external override {
-        require(_amount > 0, "Amount should > 0");
-        LockInfo storage lockInfo = locks[msg.sender];
-        require(
-            lockInfo.status == Status.Active,
-            "Lock should in Active status"
-        );
-
-        uint256 newUnlockTime = block.timestamp.add(lockInfo.lockWindow);
-        lockInfo.amount = lockInfo.amount.add(_amount);
-        lockInfo.unlockTime = newUnlockTime;
-
-        _token.safeTransferFrom(msg.sender, address(this), _amount);
-
-        emit LockedAmountIncreased(
-            msg.sender,
-            _amount,
-            lockInfo.amount,
-            newUnlockTime
-        );
     }
 
     /// @notice Redeem funds from vault
@@ -185,6 +166,14 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
             "Lock should in Redeemed status"
         );
         lockInfo.status = Status.Claimed;
+        DiamondHand.SVGParams memory svgParams = DiamondHand.SVGParams({
+            token: addressToString(address(_token)),
+            amount: lockInfo.amount,
+            lockWindow: lockInfo.lockWindow,
+            penaltyRatio: lockInfo.penalty
+        });
+
+        _diamondHand.mintTo(msg.sender, svgParams);
 
         emit Claimed(msg.sender);
     }
@@ -205,5 +194,13 @@ contract HodlVault is IHodlVault, Ownable, ReentrancyGuard {
         _token.safeTransferFrom(address(this), msg.sender, amount);
 
         emit Redeemed(msg.sender, amount);
+    }
+
+    function addressToString(address addr)
+        internal
+        pure
+        returns (string memory)
+    {
+        return (uint256(uint160(address(addr)))).toHexString(20);
     }
 }
