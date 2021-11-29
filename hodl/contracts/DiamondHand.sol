@@ -6,31 +6,39 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./IHodlVault.sol";
 
+/// @notice The ERC721 NFT for all the users who finished a lock
 contract DiamondHand is ERC721URIStorage, AccessControl {
-  using SafeMath for uint256;
+    using SafeMath for uint256;
 
-  bytes32 public constant MINTER = keccak256("MINTER");
+    bytes32 public constant MINTER = keccak256("MINTER");
 
-  uint256 private _currentTokenId = 0;
+    uint256 private _currentTokenId = 0;
 
-  constructor() ERC721("DiamondHand", "DMH") {
-    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-  }
+    constructor() ERC721("DiamondHand", "DMH") {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
 
-  function mintTo(
-    address _to,
-    IHodlVault vault
-  ) public onlyRole(MINTER) {
-    _safeMint(_to, _currentTokenId);
-    _setTokenURI(_currentTokenId, formatTokenURI(vault));
-    _currentTokenId = _currentTokenId.add(1);
-  }
+    function mintTo(address _to, IHodlVault vault) public onlyRole(MINTER) {
+        _safeMint(_to, _currentTokenId);
+        _setTokenURI(_currentTokenId, formatTokenURI(vault));
+        _currentTokenId = _currentTokenId.add(1);
+    }
 
-  function formatTokenURI(IHodlVault vault) private view returns (string memory) {
-    return string(abi.encodePacked(vault.token()));
-  }
+    function formatTokenURI(IHodlVault vault)
+        private
+        view
+        returns (string memory)
+    {
+        return string(abi.encodePacked(vault.token()));
+    }
 
-  function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, AccessControl) returns (bool) {
-    return super.supportsInterface(interfaceId);
-}
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, AccessControl)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
 }
