@@ -24,6 +24,8 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
 
     uint256 private _currentTokenId = 0;
 
+    mapping(uint256 => SVGParams) public tokenInfo;
+
     constructor() ERC721("DiamondHand", "DMH") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
@@ -32,6 +34,7 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
         public
         onlyRole(MINTER)
     {
+        tokenInfo[_currentTokenId] = params;
         _safeMint(_to, _currentTokenId);
         _setTokenURI(_currentTokenId, constructTokenURI(params));
         _currentTokenId = _currentTokenId.add(1);

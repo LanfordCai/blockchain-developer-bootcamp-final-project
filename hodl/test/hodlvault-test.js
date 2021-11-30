@@ -22,6 +22,7 @@ beforeEach(async function () {
   testCoin = await TestCoin.deploy(`0`);
 
   await testCoin.connect(owner).faucet();
+  await testCoin.connect(addr2).faucet();
   expect(await testCoin.balanceOf(owner.address)).to.equal(`${100 * 10 ** 18}`)
 
   DiamondHand = await ethers.getContractFactory("DiamondHand");
@@ -35,6 +36,7 @@ beforeEach(async function () {
   expect(await vault.penaltyReceiver()).to.equal(addr1.address);
 
   await testCoin.connect(owner).approve(vault.address, ethers.constants.MaxUint256)
+  await testCoin.connect(addr2).approve(vault.address, ethers.constants.MaxUint256)
   await diamondHand.grantRole(await diamondHand.MINTER(), vault.address);
 });
 
@@ -221,6 +223,10 @@ describe("Claim", function () {
     const penalty = 20;
     await vault.connect(owner).lock(amount, lockWindow, penalty)
 
+    const amount2 = amount.add(1000)
+    const penalty2 = 30
+    await vault.connect(addr2).lock(amount2, lockWindow, penalty2)
+
     await ethers.provider.send('evm_setNextBlockTimestamp', [time + lockWindow]);
     await ethers.provider.send('evm_mine');
 
@@ -228,6 +234,25 @@ describe("Claim", function () {
     await expect(vault.connect(owner).claim(0)).to.emit(vault, 'Claimed');
 
     expect(await diamondHand.balanceOf(owner.address)).to.equal(1)
+    const info = await diamondHand.tokenInfo(0)
+
+    expect(info.token == testCoin.address)
+    expect(info.amount.eq(amount))
+    expect(info.lockAt.eq(time))
+    expect(info.unlockAt.eq(time + lockWindow))
+    expect(info.penaltyRatio.eq(penalty))
+
+    await expect(vault.connect(addr2).redeem(0)).to.emit(vault, 'Redeemed');
+    await expect(vault.connect(addr2).claim(0)).to.emit(vault, 'Claimed');
+
+    expect(await diamondHand.balanceOf(addr2.address)).to.equal(1)
+    const info2 = await diamondHand.tokenInfo(1)
+
+    expect(info2.token == testCoin.address)
+    expect(info2.amount.eq(amount2))
+    expect(info2.lockAt.eq(time))
+    expect(info2.unlockAt.eq(time + lockWindow))
+    expect(info2.penaltyRatio.eq(penalty2))
   })
 })
 

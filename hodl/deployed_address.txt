@@ -3,8 +3,8 @@
 Network: Rinkeby
 
 * TestCoin: 0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f, Link: https://rinkeby.etherscan.io/address/0x91C538676eA5ca642fCcC386eAa8f0F7abcB3c2f
-* DiamondHand: 0x59a560a367D41a8009331333C0F619b533A0aE70, Link: https://rinkeby.etherscan.io/address/0x59a560a367D41a8009331333C0F619b533A0aE70
-* HodlVault: 0x601c7AE393f5d17694A047fFb6d1459031aC6fd3, Link: https://rinkeby.etherscan.io/address/0x601c7AE393f5d17694A047fFb6d1459031aC6fd3
+* DiamondHand: 0x853A20926545E0F819D8269494A7B7e0ED84b071, Link: https://rinkeby.etherscan.io/address/0x853A20926545E0F819D8269494A7B7e0ED84b071
+* HodlVault: 0xC50a4389B49c98DF69dacD65975daed969B0749F, Link: https://rinkeby.etherscan.io/address/0xC50a4389B49c98DF69dacD65975daed969B0749F
 
 Deprecated Contracts
 * DiamondHand: 0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD, Link: https://rinkeby.etherscan.io/address/0x9FF189a87578801EF9a38C6b6e4E5449F78FF5cD

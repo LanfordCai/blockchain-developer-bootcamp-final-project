@@ -2,8 +2,13 @@
 
 HODL! is the name of my final project, and this repository contains two projects:
 
-1. hodl: the contract of HODL!
-2. hodl-fe: the front-end code of HODL!
+1. hodl: the contract project of HODL!
+    * contracts: the smart contracts
+    * scripts: scripts for hardhat to do deployment and some other tasks
+    * test: smart contract unit tests
+2. hodl-fe: the front-end project of HODL!
+    * public: entrance of the project
+    * src: javascript/css files and smart contract abi files
 
 ### My Ethereum Address
 
@@ -27,13 +32,12 @@ HODL! is aiming to provide a tool for users to lock their ERC20 tokens for a spe
 
 For now, HODL only supports TestCoin(TC), which is issued for testing. 
 
-1. Connect: Connect Wallet by clicking the 'Connect Wallet' button
-2. Faucet: Claim 100 TC by clicking the 'Faucet' button
-3. Create Vault: Input the amount of TC the user wants to lock, choose the period of lock, and set the penalty ratio. By clicking the 'Create Vault' button, the token would be transferred to the HODL! and locked there.
+1. Connect: Connect with Metamask by clicking the 'Connect Wallet' button
+2. Faucet: Claim 100 TC for testing by clicking the 'Faucet' button
+3. Create Vault: Input the amount of TC the user wants to lock, choose the period of lock, and set the penalty ratio. By clicking the 'Create Vault' button, the token would be transferred to the HODL! and be locked.
 4. Redeem: If the lock is expired, users can redeem their token in full.
 5. Force Redeem: If the lock isn't expired, users can force redeem their token, but some tokens will be taken as a penalty.
 6. Claim: If users keep waiting until the expiration of the lock, they can claim the HODL NFT after redeeming their funds.
-
 
 #### Tech Stack and Toolings
 
