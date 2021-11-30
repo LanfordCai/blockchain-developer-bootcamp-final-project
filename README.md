@@ -2,14 +2,16 @@
 
 HODL! is the name of my final project, and this repository contains two projects:
 
-1. hodl: the contract project of HODL!
-2. hodl-fe: the front-end project of HODL!
+1. hodl: the contract project
+2. hodl-fe: the front-end project
 
 ### My Ethereum Address
 
 lanford33.eth or 0xB8153Ae427265daa3d1C8704698b2Cf66F59c4C5
 
 ### Project Demo
+
+The project has been deployed to **Rinkeby** Testnet
 
 Demo: https://ohmycoin.today/
 
@@ -64,7 +66,7 @@ yarn >= 1.22.10
 
 #### Installation
 
-```
+```bash
 git clone https://github.com/LanfordCai/blockchain-developer-bootcamp-final-project.git
 
 cd blockchain-developer-bootcamp-final-project
@@ -72,17 +74,32 @@ cd blockchain-developer-bootcamp-final-project
 
 For smart contract part:
 
-```
+```bash
 cd hodl
 npm install
+
+export ALCHEMY_API_KEY='YOUR_ALCHEMY_API_KEY'
+export DEPLOYER_PRIVATE_KEY='YOUR_DEPLOYER_PRIVATE_KEY'
+
+hh compile
 hh test
+
+hh run --network rinkeby scripts/testcoin_deployer.js
+hh run --network rinkeby scripts/diamondhand_deployer.js
+
+// modify `testCoinContract` and `diamondHandContract` in hodlvault_deployer.js according to the deploy result above and then:
+hh run --network rinkeby scripts/hodlvault_deployer.js
 ```
 
 For front-end part:
 
-```
+```bash
 cd hodl-fe
 yarn install
+
+export REACT_APP_TESTCOIN_CONTRACT='YOUR_TESTCOIN_CONTRACT_ADDRESS'
+export REACT_APP_HODL_CONTRACT='YOUR_HODLVAULT_CONTRACT_ADDRESS'
+
 yarn start
 ```
 
