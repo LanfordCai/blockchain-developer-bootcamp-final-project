@@ -3,12 +3,7 @@
 HODL! is the name of my final project, and this repository contains two projects:
 
 1. hodl: the contract project of HODL!
-    * contracts: the smart contracts
-    * scripts: scripts for hardhat to do deployment and some other tasks
-    * test: smart contract unit tests
 2. hodl-fe: the front-end project of HODL!
-    * public: entrance of the project
-    * src: javascript/css files and smart contract abi files
 
 ### My Ethereum Address
 
@@ -34,10 +29,21 @@ For now, HODL only supports TestCoin(TC), which is issued for testing.
 
 1. Connect: Connect with Metamask by clicking the 'Connect Wallet' button
 2. Faucet: Claim 100 TC for testing by clicking the 'Faucet' button
-3. Create Vault: Input the amount of TC the user wants to lock, choose the period of lock, and set the penalty ratio. By clicking the 'Create Vault' button, the token would be transferred to the HODL! and be locked.
+3. Create Vault: Input the amount of TC the user wants to lock, choose the period of lock, and set the penalty ratio. By clicking the 'Create Vault' button, the token would be transferred to the HODL! and be locked. For now, each address can create 10 vaults at most.
 4. Redeem: If the lock is expired, users can redeem their token in full.
 5. Force Redeem: If the lock isn't expired, users can force redeem their token, but some tokens will be taken as a penalty.
-6. Claim: If users keep waiting until the expiration of the lock, they can claim the HODL NFT after redeeming their funds.
+6. Claim: If users keep waiting until the expiration of the lock, they can claim the HODL NFT after redeeming their funds. The NFT is a fully onchain SVG NFT, and you can check it in Rarible or OpenSea or some other markets.
+
+#### Directory structure
+
+1. hodl: the contract project of HODL!
+    * contracts: the smart contracts
+    * scripts: scripts for hardhat to do deployment and some other tasks
+    * test: smart contract unit tests
+2. hodl-fe: the front-end project of HODL!
+    * public: entrance of the project
+    * src: javascript/css files and smart contract abi files
+
 
 #### Tech Stack and Toolings
 
@@ -53,6 +59,7 @@ For now, HODL only supports TestCoin(TC), which is issued for testing.
 node >= v14.18.0
 npm >= 6.14.15
 hardhat >= 2.2.1
+yarn >= 1.22.10
 ```
 
 #### Installation
