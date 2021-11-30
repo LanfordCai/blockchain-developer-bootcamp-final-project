@@ -66,6 +66,7 @@ const Vaults = (props) => {
       await tx.wait()
       alert(`Transaction confirmed: ${tx['hash']}`)
       setCount(value => value + 1)
+      props.handleTxConfirmed()
     } catch (e) {
       alert(e.message)
     }
@@ -79,6 +80,7 @@ const Vaults = (props) => {
       await tx.wait()
       alert(`Transaction confirmed: ${tx['hash']}`)
       setCount(value => value + 1)
+      props.handleTxConfirmed()
     } catch (e) {
       alert(e.message)
     }

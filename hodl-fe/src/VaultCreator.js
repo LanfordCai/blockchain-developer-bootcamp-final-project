@@ -50,7 +50,7 @@ const VaultCreator = (props) => {
 
   const onFinish = async (values) => {
     const decimals = await token.decimals() 
-    const amount = ethers.utils.parseUnits(values.amount, decimals)
+    const amount = ethers.utils.parseUnits(`${values.amount}`, decimals)
     try {
       const currentAllowance = await token.allowance(account, hodlContract)
       if (currentAllowance.isZero() || currentAllowance.lt(amount)) {
@@ -98,7 +98,6 @@ const VaultCreator = (props) => {
 
   return (
     <div className="vaultCreator">
-    <label>{props.count}</label>
     <Form {...layout} 
       form={form} 
       name="control-hooks" 
@@ -106,6 +105,12 @@ const VaultCreator = (props) => {
       initialValues={{
           ["PenaltyRatio"]: 100
       }}>
+      <Form.Item
+        name="balance"
+        label="Current TC Balance"
+      >
+        <label>{balance} TC</label>
+      </Form.Item>
       <Form.Item
         name="amount"
         label="Amount"
@@ -115,8 +120,8 @@ const VaultCreator = (props) => {
           },
         ]}
       >
-        <Input 
-          placeholder={`Current Balance is ${balance}`}
+        <InputNumber
+          min={0}
         />
       </Form.Item>
 

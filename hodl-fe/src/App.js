@@ -36,7 +36,10 @@ const App = () => {
         setValue(value => value + 1)
       }} trigger={value} />
       <Divider />
-      <Vaults trigger={value} />
+      <Vaults trigger={value} handleTxConfirmed={ () => {
+        setValue(value => value + 1)
+      }
+      }/>
     </div>
   );
 }
