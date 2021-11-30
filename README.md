@@ -15,7 +15,7 @@ The project has been deployed to **Rinkeby** Testnet
 
 Demo: https://ohmycoin.today/
 
-Screencast: TBD
+Screencast: https://www.loom.com/share/2a935f8ff6b74303b9e6f3ea05ffe4ef
 
 ### Project Description
 
