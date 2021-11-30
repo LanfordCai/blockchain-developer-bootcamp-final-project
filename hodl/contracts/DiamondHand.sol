@@ -20,16 +20,19 @@ contract DiamondHand is ERC721URIStorage, AccessControl {
         uint256 penaltyRatio;
     }
 
+    /// @notice only MINTER can mint NFT
     bytes32 public constant MINTER = keccak256("MINTER");
 
     uint256 private _currentTokenId = 0;
 
+    /// @notice information of NFT
     mapping(uint256 => SVGParams) public tokenInfo;
 
     constructor() ERC721("DiamondHand", "DMH") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    /// @notice mint NFT with specific params
     function mintTo(address _to, SVGParams memory params)
         public
         onlyRole(MINTER)

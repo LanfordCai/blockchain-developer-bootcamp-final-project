@@ -10,6 +10,6 @@
 
 ### Checks-Effects-Interactions
 
-- `HodlVault` avoids state changes after external calls in `lock`, `increaseAmount`, `redeem`, `forceRedeem` and `claim` functions
+- `HodlVault` avoids state changes after external calls in `lock`, `redeem`, `forceRedeem` and `claim` functions
 
 
